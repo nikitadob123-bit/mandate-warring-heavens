@@ -1,9 +1,668 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>MANDATE</title>
-</head>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>MANDATE: Воюющие Небеса</title><style>
+
+:root{--ink:#0b0907;--paper:#e7d8b6;--lacquer:#17100c;--panel:#211711;--panel2:#2b1e15;--gold:#c69b4b;--gold2:#e0bd72;--red:#8c2f25;--line:#55412b;--text:#f3ead7;--muted:#b6a78f;--good:#9bbf7b;--bad:#d46a5d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#0c0907;color:var(--text);font-family:Georgia,"Times New Roman",serif}
+button,input,select{font:inherit}.hidden{display:none!important}.btn{padding:12px 18px;border:1px solid var(--gold);background:#25190f;color:#fff;cursor:pointer;transition:.18s}.btn:hover{background:#39271a;transform:translateY(-1px)}.btn.primary{background:var(--red);border-color:#b94d3d}.btn.ghost{background:transparent;border-color:#655039}.btn.small{padding:7px 10px;font-size:13px}.muted{color:var(--muted)}.gold{color:var(--gold2)}.good{color:var(--good)}.bad{color:var(--bad)}
+.landing{min-height:100vh;background:radial-gradient(circle at 50% -10%,#4a321d 0,transparent 34%),linear-gradient(#110c08,#080604);position:relative;overflow:hidden}
+.landing:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,#fff0 0 3px,#fff1 4px 5px);opacity:.08;pointer-events:none}
+.navbar{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 max(20px,5vw);border-bottom:1px solid #493723;background:#0c0907dd;position:relative;z-index:2}
+.logo{font-size:24px;letter-spacing:.08em;color:var(--gold2)}.logo span{display:block;font-size:10px;color:#8f7d64;letter-spacing:.23em}.navlinks{display:flex;gap:12px;align-items:center}.navlinks a{color:#c9bda9;text-decoration:none;font-size:14px}
+.hero{min-height:calc(100vh - 72px);display:grid;place-items:center;text-align:center;padding:45px 20px;position:relative;z-index:1}.seal{width:96px;height:96px;border:3px solid var(--red);display:grid;place-items:center;margin:auto;color:#c95d4b;font-size:49px;transform:rotate(-4deg)}.eyebrow{letter-spacing:.24em;color:var(--gold);font-size:11px;margin-top:18px}.hero h1{font-size:clamp(50px,9vw,100px);margin:5px 0 0;letter-spacing:.04em}.hero h2{font-size:clamp(21px,4vw,36px);color:#d1ad68;margin:0 0 15px}.hero p{max-width:740px;margin:0 auto 28px;color:#b9aa93;line-height:1.7}.heroActions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.metrics{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin-top:36px;color:#9f8f78;font-size:13px}.metrics b{display:block;color:#e0bd72;font-size:24px}
+.section{padding:80px max(20px,7vw);background:#100c09}.section.alt{background:#17100c}.section h2{text-align:center;font-size:38px;margin:0 0 12px;color:#e0bd72}.sectionLead{text-align:center;max-width:720px;margin:0 auto 38px;color:#a99a85;line-height:1.6}.featureGrid,.priceGrid,.faqGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;max-width:1200px;margin:auto}.feature,.price,.faq{border:1px solid #4a3826;background:#1b130e;padding:22px}.feature h3,.price h3,.faq h3{color:#d5b474;margin-top:0}.price.featured{border-color:var(--gold);box-shadow:0 0 0 1px #8a6635 inset}.price .amount{font-size:34px;color:#fff}.price ul{padding-left:20px;color:#b6a991;line-height:1.7}
+.authOverlay{position:fixed;inset:0;background:#000b;display:grid;place-items:center;z-index:50;padding:20px}.authBox{width:min(520px,100%);background:#17100c;border:1px solid #6d5538;padding:26px;box-shadow:0 30px 80px #000}.tabs{display:flex;margin-bottom:18px}.tabs button{flex:1;padding:10px;background:#100b08;color:#a99a84;border:1px solid #483725}.tabs button.active{background:#2b1e14;color:#fff;border-color:#a97f43}.form{display:grid;gap:12px}.form input{padding:12px;background:#0c0907;color:#fff;border:1px solid #54412d}.formMessage{min-height:20px;color:#d77a6b;font-size:13px}
+.createWrap{min-height:100vh;padding:30px;background:radial-gradient(circle at 0 0,#2c1e12,transparent 35%),#0d0907}.createCard{max-width:1050px;margin:auto;border:1px solid #59442d;background:#17100c;padding:28px}.createGrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.createGrid label{display:grid;gap:6px;color:#cab99f}.createGrid input,.createGrid select{background:#0d0907;color:#fff;border:1px solid #54412d;padding:11px}.origins{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.origin{border:1px solid #483725;padding:12px;background:#130e0a;cursor:pointer}.origin.active{border-color:#c69b4b;background:#2b1e14}.origin b{display:block;color:#e0bd72;margin-bottom:5px}.origin small{color:#93846e}
+.game{min-height:100vh;display:grid;grid-template-columns:235px 1fr;background:#0d0907}.side{background:#0b0806;border-right:1px solid #493724;padding:18px;position:sticky;top:0;height:100vh;overflow:auto}.sideLogo{font-size:24px;color:#d5b474}.sideLogo small{display:block;font-size:10px;letter-spacing:.18em;color:#7f705e}.playerBlock{font-size:12px;color:#a99a85;padding:14px 0;border-bottom:1px solid #3a2d20}.navGame{display:grid;gap:5px;margin-top:14px}.navGame button{padding:9px;text-align:left;background:transparent;border:1px solid transparent;color:#b9ad9a;cursor:pointer}.navGame button:hover,.navGame button.active{background:#1a120d;border-color:#4d3a28;color:#fff}.main{padding:20px;min-width:0}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;padding-bottom:14px;border-bottom:1px solid #443321}.top h2{margin:0;color:#e2c07a}.resourceBar{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:7px 9px;border:1px solid #4a3826;background:#17100c;font-size:12px}.page{padding-top:18px}.panel{border:1px solid #4a3826;background:#17100c;padding:18px;margin-bottom:14px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{border:1px solid #463522;background:#211710;padding:15px}.card h3{color:#d8b675;margin:0 0 8px}.progress{height:9px;border:1px solid #4e3b28;background:#100c09}.progress span{height:100%;display:block;background:#8e362a}.choiceList{display:grid;gap:8px}.choice{border:1px solid #4d3a28;background:#1d140f;color:#e8dfcf;padding:11px;text-align:left;cursor:pointer}.choice:hover{border-color:#b48a4c}.mapGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.kingdom{min-height:145px;border:1px solid #53402b;background:linear-gradient(145deg,#261a11,#15100c);padding:15px;position:relative}.kingdom h3{color:#e0bd72;margin:0}.kingdom .status{position:absolute;right:10px;top:10px;font-size:11px;color:#a69782}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:9px;border-bottom:1px solid #3a2d20;text-align:left}.log{max-height:500px;overflow:auto}.log p{border-bottom:1px dashed #3d2f22;padding:9px 0;color:#b8aa94}.modal{position:fixed;inset:0;background:#000b;display:grid;place-items:center;z-index:40;padding:20px}.modalBox{width:min(640px,100%);max-height:90vh;overflow:auto;background:#17100c;border:1px solid #695037;padding:24px}.toast{position:fixed;right:18px;bottom:18px;background:#251a12;border:1px solid #b38b4c;padding:12px 16px;z-index:100}
+@media(max-width:900px){.featureGrid,.priceGrid,.faqGrid{grid-template-columns:1fr}.game{grid-template-columns:1fr}.side{height:auto;position:relative;border-right:0;border-bottom:1px solid #493724}.navGame{grid-template-columns:repeat(3,1fr)}.cards,.mapGrid{grid-template-columns:1fr 1fr}.origins{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.navbar{height:auto;padding:14px 16px;align-items:flex-start}.navlinks a{display:none}.hero{min-height:90vh}.cards,.mapGrid,.createGrid{grid-template-columns:1fr}.origins{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.navGame{grid-template-columns:1fr 1fr}}
+
+
+/* ===== Responsive UX pass v1.1 ===== */
+html,body{max-width:100%;overflow-x:hidden}
+body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,input,select{touch-action:manipulation}
+button,.btn,.choice,.origin,.kingdom{min-height:44px}
+input,select{font-size:16px}
+img,svg,canvas{max-width:100%;height:auto}
+.tableWrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table{min-width:620px}
+.main{width:100%;overflow:hidden}
+.page{width:100%}
+.panel,.card,.feature,.price,.faq,.kingdom{min-width:0}
+.card p,.panel p,.feature p,.faq p,.price p{overflow-wrap:anywhere}
+.resourceBar{max-width:100%}
+.pill{white-space:nowrap}
+.mobileMenuBtn{display:none}
+.mobileBottomNav{display:none}
+.sideClose{display:none}
+
+/* Large desktop */
+@media(min-width:1440px){
+  .main{padding:28px 36px}
+  .page{max-width:1500px;margin:0 auto}
+  .side{width:260px}
+  .game{grid-template-columns:260px 1fr}
+  .cards{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .mapGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .featureGrid,.priceGrid,.faqGrid{max-width:1380px}
+}
+
+/* Laptop / tablet landscape */
+@media(max-width:1100px){
+  .game{grid-template-columns:205px 1fr}
+  .side{padding:14px}
+  .main{padding:16px}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mapGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .featureGrid,.priceGrid,.faqGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .navlinks{gap:8px}
+}
+
+/* Tablet portrait and phones */
+@media(max-width:820px){
+  .navbar{height:64px;padding:0 14px;position:sticky;top:0;z-index:30}
+  .logo{font-size:20px}
+  .navlinks a{display:none}
+  .hero{min-height:calc(100dvh - 64px);padding:28px 16px}
+  .hero h1{font-size:clamp(46px,16vw,72px)}
+  .hero h2{font-size:clamp(20px,7vw,30px)}
+  .hero p{font-size:15px}
+  .heroActions{width:100%;display:grid;grid-template-columns:1fr;max-width:430px;margin-inline:auto}
+  .heroActions .btn,.heroActions a{width:100%;text-align:center}
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+  .section{padding:48px 16px}
+  .section h2{font-size:30px}
+  .featureGrid,.priceGrid,.faqGrid{grid-template-columns:1fr}
+
+  .createWrap{padding:14px}
+  .createCard{padding:18px}
+  .createGrid{grid-template-columns:1fr}
+  .origins{grid-template-columns:1fr 1fr}
+
+  .game{display:block;padding-bottom:76px}
+  .side{
+    position:fixed;left:0;top:0;bottom:0;width:min(84vw,330px);height:100dvh;
+    z-index:60;transform:translateX(-105%);transition:transform .22s ease;
+    box-shadow:20px 0 50px #000b;border-right:1px solid #5b432d;
+  }
+  .side.open{transform:translateX(0)}
+  .sideClose{display:block;position:absolute;right:10px;top:10px;background:transparent;border:1px solid #5d4630;color:#fff;width:38px;height:38px}
+  .mobileMenuBtn{display:inline-grid;place-items:center;width:44px;height:44px;padding:0}
+  .main{padding:12px}
+  .top{position:sticky;top:0;z-index:20;background:#0d0907f2;backdrop-filter:blur(8px);margin:-12px -12px 14px;padding:10px 12px;border-bottom:1px solid #443321}
+  .top>div:first-child{display:flex;align-items:center;gap:10px;min-width:0}
+  .top h2{font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55vw}
+  #chapterLine{display:none}
+  .resourceBar{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+  .resourceBar::-webkit-scrollbar{display:none}
+  .cards{grid-template-columns:1fr}
+  .mapGrid{grid-template-columns:1fr 1fr}
+  .panel{padding:14px}
+  .choice{font-size:15px}
+  .navGame{grid-template-columns:1fr}
+
+  .mobileBottomNav{
+    position:fixed;display:grid;grid-template-columns:repeat(5,1fr);
+    left:0;right:0;bottom:0;z-index:50;background:#0b0806f7;border-top:1px solid #4b3826;
+    padding:max(5px,env(safe-area-inset-bottom)) 5px calc(5px + env(safe-area-inset-bottom));
+    backdrop-filter:blur(10px);
+  }
+  .mobileBottomNav button{background:transparent;border:0;color:#b9ad9a;padding:8px 3px;font-size:11px;min-height:52px;display:grid;place-items:center;gap:3px}
+  .mobileBottomNav button.active{color:#e0bd72}
+}
+
+/* Small phones */
+@media(max-width:520px){
+  .navbar{padding:10px 12px;height:auto}
+  .seal{width:76px;height:76px;font-size:38px}
+  .eyebrow{letter-spacing:.15em;font-size:10px}
+  .metrics{grid-template-columns:1fr 1fr}
+  .metrics b{font-size:20px}
+  .origins{grid-template-columns:1fr}
+  .mapGrid{grid-template-columns:1fr}
+  .modal,.authOverlay{padding:10px}
+  .modalBox,.authBox{padding:18px;border-radius:0}
+  .tabs button{padding:11px 8px}
+  .top{align-items:stretch}
+  .resourceBar{gap:6px}
+  .pill{font-size:11px;padding:6px 8px}
+  .card h3{font-size:18px}
+}
+
+/* Very narrow screens */
+@media(max-width:360px){
+  .hero h1{font-size:42px}
+  .hero h2{font-size:20px}
+  .metrics{grid-template-columns:1fr}
+  .mobileBottomNav button{font-size:10px}
+}
+
+</style></head>
 <body>
-<h1>MANDATE: Воюющие Небеса</h1>
-</body>
-</html>
+<div id="landing" class="landing">
+<nav class="navbar"><div class="logo">MANDATE<span>ВОЮЮЩИЕ НЕБЕСА</span></div><div class="navlinks"><a href="#features">Игра</a><a href="#editions">Доступ</a><a href="#faq">FAQ</a><button id="accountBtn" class="btn small" onclick="openAuth()">Войти</button></div></nav>
+<section class="hero"><div><div class="seal">天</div><div class="eyebrow">ОФИЦИАЛЬНАЯ ВЕРСИЯ 1.0 · ПОЛНАЯ КАМПАНИЯ</div><h1>MANDATE</h1><h2>ВОЮЮЩИЕ НЕБЕСА</h2><p>Начни простым солдатом. Собери элитную армию. Переживи войны семи царств и впиши своё имя в летопись Расколотого Неба.</p><div class="heroActions"><button class="btn primary" onclick="newCampaign()">劍 Новая кампания</button><button class="btn" onclick="continueCampaign()">↻ Продолжить</button><a class="btn ghost" href="#editions" style="text-decoration:none">令 Полное издание</a></div><div class="metrics"><div><b>42</b>сюжетные главы</div><div><b>420</b>операций хроник</div><div><b>60</b>указов</div><div><b>85</b>уровней владений</div></div></div></section>
+</div>
+<section id="features" class="section"><h2>Создай собственную легенду</h2><p class="sectionLead">Никаких заимствованных персонажей или государств: самостоятельная военная сага о распавшейся империи Тянь.</p><div class="featureGrid">
+<div class="feature"><h3>⚔ От солдата до Великого генерала</h3><p>12 ступеней командования, личные дуэли, тактика и армии в десятки тысяч бойцов.</p></div>
+<div class="feature"><h3>🗺 Семь царств</h3><p>Цзинь, Лян, Яньло, Чуань, Хай, Вэйшань и Юэ ведут собственные войны и меняют границы.</p></div>
+<div class="feature"><h3>🕵 Разведка с последствиями</h3><p>Срывай снабжение, находи тайные пути, раскрывай засады и ослабляй врага до сражения.</p></div>
+<div class="feature"><h3>❤️ Живые отношения</h3><p>Соперники, союзники и романтические линии меняются вместе с сюжетом и твоей репутацией.</p></div>
+<div class="feature"><h3>🏯 Владения и политика</h3><p>Развивай поместье до города, издавай указы, управляй казной и влиянием при дворе.</p></div>
+<div class="feature"><h3>📜 Личная летопись</h3><p>Игра записывает важные решения и превращает прохождение в биографию твоего героя.</p></div></div></section>
+<section id="editions" class="section alt"><h2>Доступ к игре</h2><p class="sectionLead">Страница продаж готова как шаблон: цены и платёжную систему можно подключить к реальному провайдеру перед коммерческим запуском.</p><div class="priceGrid">
+<div class="price"><h3>Рекрут</h3><div class="amount">Бесплатно</div><p class="muted">Пролог и базовые системы.</p><ul><li>Создание героя</li><li>Первые 3 главы</li><li>Локальная летопись</li></ul><button class="btn" onclick="newCampaign()">Играть</button></div>
+<div class="price featured"><h3>Великий генерал</h3><div class="amount">$3 / месяц</div><p class="muted">Основное издание проекта.</p><ul><li>Все 42 главы</li><li>420 операций</li><li>Отношения и свидания</li><li>85 уровней владений</li><li>Облачное сохранение аккаунта</li></ul><a class="btn primary" href="https://boosty.to/7thdimension/purchase/2906702?ssource=DIRECT&share=subscription_link" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">Оформить на Boosty · $3</a></div>
+<div class="price"><h3>Летописец</h3><div class="amount">Издание поддержки</div><p class="muted">Для будущих дополнительных материалов.</p><ul><li>Всё из полной версии</li><li>Цифровая летопись</li><li>Косметические знамёна</li></ul><button class="btn" onclick="openPurchase()">Подробнее</button></div></div></section>
+<section id="faq" class="section"><h2>FAQ о покупке и аккаунте</h2><div class="faqGrid">
+<div class="faq"><h3>Где хранятся сохранения?</h3><p>Если игра опубликована на сервере — прогресс сохраняется в облачном аккаунте. Если открыть файл прямо на телефоне — автоматически используется локальный аккаунт и сохранение на этом устройстве.</p></div>
+<div class="faq"><h3>Можно играть с другого устройства?</h3><p>В облачном режиме — да, достаточно войти в тот же аккаунт. При прямом открытии файла без сервера аккаунт локальный и хранится только на текущем устройстве.</p></div>
+<div class="faq"><h3>Оплата уже настоящая?</h3><p>Нет. Эта сборка содержит готовый интерфейс магазина, но не списывает деньги. Для продаж нужно подключить платёжного провайдера и юридические страницы.</p></div>
+<div class="faq"><h3>Можно удалить прогресс?</h3><p>Да. В профиле игрока есть сброс серверного сохранения и возможность начать новую летопись.</p></div>
+<div class="faq"><h3>Что входит в полную кампанию?</h3><p>42 сюжетные главы, 420 операций хроник, 60 указов, система армии, разведки, отношений, рынка и владений.</p></div>
+<div class="faq"><h3>Это связано с «Царством»?</h3><p>Нет. MANDATE использует собственные государства, персонажей, историю и лор, вдохновлённые общей эпохой древнекитайских междоусобных войн.</p></div>
+</div></section>
+
+<div id="authOverlay" class="authOverlay hidden"><div class="authBox"><div class="tabs"><button id="loginTab" class="active" onclick="authTab('login')">Вход</button><button id="registerTab" onclick="authTab('register')">Регистрация</button></div>
+<div id="loginForm" class="form"><input id="loginId" placeholder="Логин или email"><input id="loginPass" type="password" placeholder="Пароль"><button class="btn primary" onclick="login()">Войти</button></div>
+<div id="registerForm" class="form hidden"><input id="regName" placeholder="Имя пользователя"><input id="regEmail" type="email" placeholder="Email"><input id="regPass" type="password" placeholder="Пароль (от 6 символов)"><button class="btn primary" onclick="register()">Создать аккаунт</button></div>
+<div id="authMsg" class="formMessage"></div><button class="btn ghost" onclick="closeAuth()">Закрыть</button></div></div>
+
+<div id="createScreen" class="createWrap hidden"><div class="createCard"><div class="eyebrow">217 ГОД РАСКОЛОТОГО НЕБА</div><h1>Создание героя</h1><p class="muted">Империя Тянь мертва. Семь царств делят Поднебесную, а ты пока лишь ещё одно имя в списках рекрутов.</p><div class="createGrid">
+<label>Имя героя<input id="heroName" value="Арата Люцифуг"></label><label>Родное царство<select id="heroHome"><option>Цзинь</option><option>Лян</option><option>Яньло</option><option>Чуань</option><option>Хай</option><option>Вэйшань</option><option>Юэ</option></select></label>
+<div id="origins" class="origins"></div></div><div class="heroActions" style="margin-top:20px"><button class="btn ghost" onclick="exitCreate()">Назад</button><button class="btn primary" onclick="startCampaign()">Начать летопись</button></div></div></div>
+
+<div id="gameScreen" class="game hidden"><aside id="gameSide" class="side"><button class="sideClose" onclick="toggleMobileMenu(false)">×</button><div class="sideLogo">MANDATE<small>ВОЮЮЩИЕ НЕБЕСА</small></div><div id="playerBlock" class="playerBlock"></div><div id="gameNav" class="navGame"></div></aside><main class="main"><div class="top"><div><button class="btn ghost mobileMenuBtn" onclick="toggleMobileMenu()">☰</button><div><h2 id="pageTitle"></h2><div id="chapterLine" class="muted"></div></div></div><div id="resources" class="resourceBar"></div></div><div id="page" class="page"></div></main></div>
+<div id="purchaseModal" class="modal hidden"><div class="modalBox"><h2>Доступ через Boosty</h2>
+<p>Полная версия MANDATE привязывается к активной подписке за <b>$3 в месяц</b>.</p>
+<p><a class="btn primary" href="https://boosty.to/7thdimension/purchase/2906702?ssource=DIRECT&share=subscription_link" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">Перейти к подписке Boosty</a></p>
+<p class="muted">После оплаты Boosty выдаёт роль на Discord. Вернись в игру, войди в игровой аккаунт и нажми «Связать Discord» — сервер проверит нужную роль автоматически.</p>
+<button class="btn" onclick="linkDiscord()">Связать Discord</button>
+<button class="btn ghost" onclick="closePurchase()">Закрыть</button></div></div>
+<nav id="mobileBottomNav" class="mobileBottomNav hidden"></nav><div id="toast" class="toast hidden"></div><script>
+
+const $=id=>document.getElementById(id);
+const KINGDOMS=[
+ {n:"Цзинь",region:"Запад",army:"Железные копья",desc:"Строгое царство реформаторов и тяжёлой пехоты."},
+ {n:"Лян",region:"Центр",army:"Золотая стража",desc:"Богатые равнины, торговые города и сильная бюрократия."},
+ {n:"Яньло",region:"Север",army:"Северные всадники",desc:"Степи, крепкие кони и генералы, воспитанные пограничной войной."},
+ {n:"Чуань",region:"Юг",army:"Багровые легионы",desc:"Самое населённое царство, способное выставлять огромные армии."},
+ {n:"Хай",region:"Восток",army:"Морские арбалеты",desc:"Порты, флот и богатство восточных морей."},
+ {n:"Вэйшань",region:"Горы",army:"Каменные щиты",desc:"Горные перевалы, крепости и непревзойдённые инженеры."},
+ {n:"Юэ",region:"Юго-восток",army:"Тени Юэ",desc:"Купеческие дома, разведчики, наёмники и тайные союзы."}
+];
+const ORIGINS=[
+ ["Крестьянский сын","+2 Стойкость · уважение простых солдат"],
+ ["Обедневший дворянин","+2 Харизма · +10 Влияние"],
+ ["Наёмник","+2 Сила · +80 серебра"],
+ ["Сирота войны","+2 Разведка · +1 Стойкость"],
+ ["Ученик стратега","+3 Тактика · ускоренное обучение"]
+];
+const RANKS=["Рекрут","Солдат","Десятник","Сотник","Пятисотник","Тысячник","Командир 3000","Командир 5000","Генерал","Старший генерал","Великий генерал","Верховный главнокомандующий"];
+const CHAPTER_NAMES=[
+"Пепел старой империи","Сто имён на бамбуке","Кровь на границе","Знамя Го Чжэня","Первый приказ","Волчий перевал",
+"Город без ворот","Клятва сотни","Три дороги","Полководец из тумана","Падение Шуйчэна","Тысячник",
+"Пир перед бурей","Семь послов","Алый союз","Шесть армий идут на запад","Багровая Лисица","Ночь горящих складов",
+"Стена из десяти тысяч щитов","Цена победы","Чёрный снег Яньло","Кавалерия севера","Дуэль на реке Цан","Коронованный ребёнок",
+"Змеи императорского двора","Указ о железе","Восстание Чёрного Знамени","Предатель в штабе","Осада Небесных ворот","Падение первого царства",
+"Сломанная корона","Две столицы","Война наследников","Пять великих армий","Река мёртвых знамён","Последний союз",
+"Семь корон","Мандат без императора","Великая кампания","Последняя война Поднебесной","Врата Тянь","Мандат Неба"
+];
+const chapter = i => ({
+ id:i+1,name:CHAPTER_NAMES[i],
+ summary:[
+ "Пограничная война втягивает героя в конфликт, который намного больше его первого отряда.",
+ "Политика двора сталкивается с военной необходимостью, и каждое решение создаёт новых союзников и врагов.",
+ "Разведка раскрывает слабое место противника, но операция может изменить отношения между царствами.",
+ "Большая битва проверяет армию, снабжение и способность героя удерживать людей под своим знаменем."
+ ][i%4],
+ recommended:1+i*2,
+ reward:120+i*28
+});
+const CHAPTERS=Array.from({length:42},(_,i)=>chapter(i));
+const OP_TYPES=["Разведка","Ночной рейд","Сопровождение","Охота на офицера","Защита обоза","Диверсия","Полевое сражение","Переговоры","Спасение","Осада"];
+const OPERATIONS=Array.from({length:420},(_,i)=>({
+ id:i+1,chapter:Math.floor(i/10)+1,type:OP_TYPES[i%OP_TYPES.length],
+ name:`${OP_TYPES[i%10]}: операция «${["Тихая цапля","Сломанное копьё","Красный дождь","Пепельный мост","Нефритовый волк","Десять факелов","Мёртвый колокол","Белая река","Тёмный бамбук","Грозовой барабан"][i%10]}»`,
+ power:12+Math.floor(i/7),energy:6+(i%8),gold:15+(i%17)*4,xp:8+(i%9)*2
+}));
+const EDICTS=Array.from({length:60},(_,i)=>({
+ id:i+1,name:["Указ о зерне","Военная перепись","Кузницы короны","Дорожная повинность","Охрана караванов","Набор инженеров"][i%6]+" "+(Math.floor(i/6)+1),
+ desc:["+снабжение армии","+резерв рекрутов","+качество оружия","+скорость передвижения","+доход торговли","+осадная эффективность"][i%6],
+ cost:80+i*12
+}));
+const GOODS=[
+ ["Закалённый цзянь",180,"Редкий"],["Ламеллярный доспех",240,"Редкий"],["Боевой конь",320,"Эпический"],
+ ["Походный паёк ×5",35,"Обычный"],["Карта тайных троп",90,"Редкий"],["Талисман Белого Тигра",540,"Легендарный"],
+ ["Копьё Полярной звезды",860,"Легендарный"],["Императорская печать Тянь",2200,"Небесный"]
+];
+const NAV=[
+ ["campaign","⚔ Кампания"],["chronicles","☰ Хроники"],["map","🗺 Карта"],["army","👥 Армия"],["inventory","🎒 Снаряжение"],
+ ["market","🏮 Рынок"],["intel","🕵 Разведка"],["relations","❤️ Отношения"],["estate","🏯 Владения"],["edicts","令 Указы"],
+ ["annals","📜 Летопись"],["profile","王 Профиль"]
+];
+let selectedOrigin=ORIGINS[0][0], S=null, token=localStorage.getItem("mandateToken")||"", account=JSON.parse(localStorage.getItem("mandateAccount")||"null");
+
+function notify(t){$("toast").textContent=t;$("toast").classList.remove("hidden");setTimeout(()=>$("toast").classList.add("hidden"),1800)}
+function updateAccountButton(){$("accountBtn").textContent=account?`王 ${account.username}`:"Войти"}
+updateAccountButton();
+
+function openAuth(){$("authOverlay").classList.remove("hidden")}
+function closeAuth(){$("authOverlay").classList.add("hidden");$("authMsg").textContent=""}
+function authTab(t){$("loginForm").classList.toggle("hidden",t!=="login");$("registerForm").classList.toggle("hidden",t!=="register");$("loginTab").classList.toggle("active",t==="login");$("registerTab").classList.toggle("active",t==="register")}
+async function api(url,opt={}){
+ opt.headers={...(opt.headers||{}),"Content-Type":"application/json",...(token?{Authorization:`Bearer ${token}`}:{})};
+ const r=await fetch(url,opt); const d=await r.json().catch(()=>({}));
+ if(!r.ok) throw new Error(d.error||"Ошибка сервера"); return d;
+}
+async function register(){
+ try{const d=await api("/api/register",{method:"POST",body:JSON.stringify({username:$("regName").value,email:$("regEmail").value,password:$("regPass").value})});token=d.token;account=d.user;localStorage.setItem("mandateToken",token);localStorage.setItem("mandateAccount",JSON.stringify(account));updateAccountButton();closeAuth();notify("Аккаунт создан")}
+ catch(e){$("authMsg").textContent=e.message}
+}
+async function login(){
+ try{const d=await api("/api/login",{method:"POST",body:JSON.stringify({login:$("loginId").value,password:$("loginPass").value})});token=d.token;account=d.user;localStorage.setItem("mandateToken",token);localStorage.setItem("mandateAccount",JSON.stringify(account));updateAccountButton();closeAuth();notify("Вход выполнен")}
+ catch(e){$("authMsg").textContent=e.message}
+}
+function logout(){token="";account=null;localStorage.removeItem("mandateToken");localStorage.removeItem("mandateAccount");updateAccountButton();notify("Вы вышли из аккаунта")}
+function openPurchase(){$("purchaseModal").classList.remove("hidden")}function closePurchase(){$("purchaseModal").classList.add("hidden")}
+
+$("origins").innerHTML=ORIGINS.map((o,i)=>`<div class="origin ${i===0?"active":""}" onclick="pickOrigin(this,'${o[0]}')"><b>${o[0]}</b><small>${o[1]}</small></div>`).join("");
+function pickOrigin(el,n){selectedOrigin=n;document.querySelectorAll(".origin").forEach(x=>x.classList.remove("active"));el.classList.add("active")}
+
+function baseState(){
+ const s={name:$("heroName").value.trim()||"Безымянный",home:$("heroHome").value,origin:selectedOrigin,year:217,day:1,chapter:1,level:1,xp:0,rankIndex:0,
+ gold:150,energy:100,reputation:0,influence:0,intel:15,army:0,estate:0,hp:100,
+ stats:{Сила:8,Стойкость:8,Тактика:7,Харизма:6,Разведка:6},
+ inventory:["Старый цзянь","Кожаный нагрудник","Походный паёк ×3"],units:[],
+ relations:{"Го Чжэнь":8,"Хуа Нин":0,"Линь Жаоюэ":0,"Шэнь Ло":0,"Мэй Ша":0,"Сунь Цэлин":0},
+ completedOps:[],edicts:[],annals:["217 год — герой прибыл в пограничный лагерь Цзинь."],flags:{},lastPage:"campaign"};
+ if(selectedOrigin==="Крестьянский сын")s.stats.Стойкость+=2;
+ if(selectedOrigin==="Обедневший дворянин"){s.stats.Харизма+=2;s.influence+=10}
+ if(selectedOrigin==="Наёмник"){s.stats.Сила+=2;s.gold+=80}
+ if(selectedOrigin==="Сирота войны"){s.stats.Разведка+=2;s.stats.Стойкость+=1}
+ if(selectedOrigin==="Ученик стратега")s.stats.Тактика+=3;
+ return s;
+}
+function newCampaign(){$("landing").classList.add("hidden");$("createScreen").classList.remove("hidden")}
+function exitCreate(){$("createScreen").classList.add("hidden");$("landing").classList.remove("hidden")}
+function startCampaign(){S=baseState();localSave();enterGame()}
+async function continueCampaign(){
+ let loaded=null;
+ if(token){try{const d=await api("/api/save");loaded=d.save}catch(e){}}
+ if(!loaded)loaded=JSON.parse(localStorage.getItem("mandateLocalSave")||"null");
+ if(!loaded){notify("Сохранений пока нет");return}
+ S=loaded;enterGame();
+}
+function enterGame(){$("landing").classList.add("hidden");$("createScreen").classList.add("hidden");$("gameScreen").classList.remove("hidden");$("gameNav").innerHTML=NAV.map(([k,n])=>`<button data-page="${k}" onclick="render('${k}')">${n}</button>`).join("");render(S.lastPage||"campaign")}
+function exitGame(){$("gameScreen").classList.add("hidden");$("landing").classList.remove("hidden");localSave()}
+function localSave(){if(S)localStorage.setItem("mandateLocalSave",JSON.stringify(S))}
+async function cloudSave(){if(!S)return;if(!token){localSave();notify("Сохранено локально. Войди в аккаунт для облака.");return}try{await api("/api/save",{method:"PUT",body:JSON.stringify({save:S})});localSave();notify("Сохранено в аккаунте")}catch(e){notify(e.message)}}
+function topUI(){
+ $("playerBlock").innerHTML=`<b>${S.name}</b><br><span class="gold">${RANKS[S.rankIndex]}</span> · Ур. ${S.level}<br>${S.origin}<br><span class="muted">${S.home}</span>`;
+ $("resources").innerHTML=`<span class="pill">⚡ ${S.energy}/100</span><span class="pill">🪙 ${S.gold}</span><span class="pill">⭐ ${S.reputation}</span><span class="pill">🕵 ${S.intel}</span><span class="pill">👥 ${S.army}</span>`;
+ $("chapterLine").textContent=`Глава ${S.chapter}/42 · ${CHAPTERS[S.chapter-1].name} · День ${S.day}, ${S.year} г.`;
+}
+function render(k){S.lastPage=k;localSave();document.querySelectorAll("#gameNav button").forEach(b=>b.classList.toggle("active",b.dataset.page===k));topUI();const names=Object.fromEntries(NAV);$("pageTitle").textContent=(names[k]||k).replace(/^[^ ]+ /,"");window["page_"+k]()}
+function gainXP(n){S.xp+=n;while(S.xp>=100){S.xp-=100;S.level++;S.stats.Сила++;S.stats.Стойкость++;if(S.level%3===0)S.stats.Тактика++}}
+function advanceDay(){S.day++;if(S.day>360){S.day=1;S.year++}}
+function event(text,delta={}){for(const[k,v]of Object.entries(delta)){if(k==="xp")gainXP(v);else S[k]=(S[k]||0)+v}S.energy=Math.max(0,Math.min(100,S.energy));S.annals.push(`${S.year} год, день ${S.day} — ${text}`);advanceDay();localSave();notify(text)}
+
+function page_campaign(){
+ const c=CHAPTERS[S.chapter-1], nextRank=Math.min(11,Math.floor((S.chapter-1)/4));
+ if(nextRank>S.rankIndex)S.rankIndex=nextRank;
+ const special=S.chapter===17?`<div class="panel"><h3 class="gold">Особая сюжетная линия: Багровая Лисица</h3><p>На поле боя ты впервые сталкиваешься с Линь Жаоюэ, Великим генералом Чуань. Она могла приказать лучникам открыть огонь, но вместо этого заинтересовалась человеком, сорвавшим её манёвр.</p><div class="choiceList"><button class="choice" onclick="relationEvent()">Ответить на её провокацию и принять интеллектуальную дуэль</button></div></div>`:"";
+ $("page").innerHTML=`<div class="panel"><div class="eyebrow">ГЛАВА ${c.id} ИЗ 42</div><h2>${c.name}</h2><p>${c.summary}</p><p class="muted">Рекомендуемый уровень: ${c.recommended}. Награда главы: ${c.reward} серебра.</p><div class="choiceList">
+ <button class="choice" onclick="chapterAction('aggressive')">⚔ Ставка на прямой удар — выше риск, больше славы</button>
+ <button class="choice" onclick="chapterAction('tactical')">令 Использовать разведку и манёвр</button>
+ <button class="choice" onclick="chapterAction('diplomatic')">王 Искать политическое решение</button></div></div>${special}
+ <div class="cards"><div class="card"><h3>Военный путь</h3><b>${RANKS[S.rankIndex]}</b><div class="progress"><span style="width:${S.xp}%"></span></div><small class="muted">${S.xp}/100 опыта</small></div>
+ <div class="card"><h3>Текущий фронт</h3><p>${S.chapter<15?"Западные границы":S.chapter<30?"Война семи царств":"Объединение Поднебесной"}</p></div>
+ <div class="card"><h3>Операции главы</h3><p>${S.completedOps.filter(id=>OPERATIONS[id-1].chapter===S.chapter).length}/10 завершено</p></div></div>`;
+}
+function chapterAction(type){
+ let chance=S.stats.Тактика+S.stats.Сила+S.reputation/5+Math.random()*20;
+ if(type==="tactical"){if(S.intel<5)return notify("Нужно 5 разведданных");S.intel-=5;chance+=8}
+ if(type==="diplomatic")chance+=S.stats.Харизма;
+ if(chance<17){event("План провалился, но армия сохранила боеспособность.",{energy:-18,xp:8});render("campaign");return}
+ S.gold+=CHAPTERS[S.chapter-1].reward;gainXP(30);S.reputation+=type==="aggressive"?8:5;S.energy=Math.max(0,S.energy-15);
+ S.annals.push(`${S.year} год — завершена глава «${CHAPTERS[S.chapter-1].name}».`);
+ if(S.chapter<42)S.chapter++; else S.flags.finished=true;
+ advanceDay();localSave();render("campaign");notify(S.flags.finished?"Мандат Неба решён. Летопись завершена.":"Глава завершена");
+}
+function relationEvent(){S.relations["Линь Жаоюэ"]=Math.max(S.relations["Линь Жаоюэ"],12);S.annals.push("Первая встреча с Линь Жаоюэ — Багровой Лисицей Чуань.");notify("Линь Жаоюэ: Интерес +12");render("relations")}
+
+function page_chronicles(){
+ const ops=OPERATIONS.filter(o=>o.chapter===S.chapter);
+ $("page").innerHTML=`<div class="panel"><h2>Операции хроник</h2><p class="muted">Всего в кампании 420 операций — по десять на каждую из 42 глав.</p><div class="cards">${ops.map(o=>`<div class="card"><h3>${o.name}</h3><div class="muted">${o.type} · Сложность ${o.power}</div><p>⚡ ${o.energy} · награда ${o.gold} 🪙 / ${o.xp} опыта</p><button class="btn small ${S.completedOps.includes(o.id)?"ghost":""}" ${S.completedOps.includes(o.id)?"disabled":""} onclick="runOp(${o.id})">${S.completedOps.includes(o.id)?"Завершено":"Начать"}</button></div>`).join("")}</div></div>`;
+}
+function runOp(id){const o=OPERATIONS[id-1];if(S.energy<o.energy)return notify("Не хватает энергии");let power=S.stats.Сила+S.stats.Тактика+Math.floor(S.army/100)+Math.floor(S.intel/8)+Math.random()*18;if(power<o.power){event(`Операция «${o.name}» сорвана.`,{energy:-o.energy,xp:Math.floor(o.xp/3)});render("chronicles");return}S.energy-=o.energy;S.gold+=o.gold;gainXP(o.xp);S.completedOps.push(id);S.intel+=o.type==="Разведка"?4:0;S.annals.push(`Успешно завершена ${o.name}.`);advanceDay();localSave();render("chronicles");notify("Операция выполнена")}
+
+function page_map(){$("page").innerHTML=`<div class="mapGrid">${KINGDOMS.map((k,i)=>`<div class="kingdom"><span class="status">${i===0?"Союзник":i===3&&S.chapter>=15?"Главный противник":"Нейтрально"}</span><h3>${k.n}</h3><div class="muted">${k.region} · ${k.army}</div><p>${k.desc}</p></div>`).join("")}</div>`}
+
+function syncArmy(){if(S.army>0&&!S.units.length)S.units=[["Копейщики",Math.ceil(S.army*.45),1],["Лучники",Math.ceil(S.army*.25),1],["Конница",Math.ceil(S.army*.15),1],["Разведчики",Math.ceil(S.army*.15),1]]}
+function page_army(){syncArmy();$("page").innerHTML=`<div class="panel"><h2>Армия под твоим знаменем</h2><p>Общая численность: <b>${S.army}</b></p><button class="btn small" onclick="recruit()">Нанять 50 бойцов · 120 🪙</button><table class="table"><tr><th>Подразделение</th><th>Численность</th><th>Ступень</th><th></th></tr>${S.units.map((u,i)=>`<tr><td>${u[0]}</td><td>${u[1]}</td><td>${u[2]}</td><td><button class="btn small ghost" onclick="upgradeUnit(${i})">Улучшить · ${100*u[2]} 🪙</button></td></tr>`).join("")}</table></div>`}
+function recruit(){if(S.gold<120)return notify("Недостаточно серебра");S.gold-=120;S.army+=50;S.units=[];syncArmy();event("К знамени присоединились 50 новых воинов.",{});render("army")}
+function upgradeUnit(i){let c=100*S.units[i][2];if(S.gold<c)return notify("Недостаточно серебра");S.gold-=c;S.units[i][2]++;notify("Войска улучшены");render("army")}
+
+function page_inventory(){$("page").innerHTML=`<div class="panel"><h2>Инвентарь</h2><div class="cards">${S.inventory.map(x=>`<div class="card"><h3>${x}</h3><p class="muted">Предмет личного снаряжения.</p></div>`).join("")}</div></div><div class="panel"><h2>Характеристики</h2><table class="table">${Object.entries(S.stats).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join("")}</table></div>`}
+function page_market(){$("page").innerHTML=`<div class="cards">${GOODS.map((g,i)=>`<div class="card"><h3>${g[0]}</h3><div class="gold">${g[2]}</div><p>${g[1]} 🪙</p><button class="btn small" onclick="buyGood(${i})">Купить</button></div>`).join("")}</div>`}
+function buyGood(i){const g=GOODS[i];if(S.gold<g[1])return notify("Недостаточно серебра");S.gold-=g[1];S.inventory.push(g[0]);notify("Предмет приобретён");render("market")}
+function page_intel(){$("page").innerHTML=`<div class="cards"><div class="card"><h3>Сеть информаторов</h3><p>60 🪙 → +12 разведданных</p><button class="btn small" onclick="buyIntel()">Вербовать</button></div><div class="card"><h3>Перехват гонца</h3><p>⚡ 10 → +8 разведданных, шанс получить секрет.</p><button class="btn small" onclick="intelMission()">Провести</button></div><div class="card"><h3>Разведданные</h3><div style="font-size:35px" class="gold">${S.intel}</div><p class="muted">Используются в сюжетных решениях и повышают шанс операций.</p></div></div>`}
+function buyIntel(){if(S.gold<60)return notify("Недостаточно серебра");S.gold-=60;S.intel+=12;render("intel")}
+function intelMission(){if(S.energy<10)return notify("Не хватает энергии");event("Перехвачен вражеский гонец.",{energy:-10,intel:8,xp:6});render("intel")}
+
+function relStage(v){return v>=85?"Любовь":v>=60?"Привязанность":v>=35?"Уважение":v>=15?"Интерес":v>0?"Знакомство":"Незнакомец"}
+function page_relations(){$("page").innerHTML=`<div class="cards">${Object.entries(S.relations).map(([n,v])=>`<div class="card"><h3>${n}</h3><b>${relStage(v)}</b><div class="progress"><span style="width:${Math.min(100,v)}%"></span></div><p class="muted">${n==="Линь Жаоюэ"?"Великий генерал Чуань. Её длинная линия проходит путь от поля боя Алого союза до тайных переговоров и «Ночи тысячи фонарей» на стадии любви.":"Отношения развиваются через сюжет, совместные операции и решения."}</p>${v>=60?`<button class="btn small" onclick="dateEvent('${n}')">Провести время вместе</button>`:""}</div>`).join("")}</div>`}
+function dateEvent(n){S.energy=Math.max(0,S.energy-8);S.relations[n]=Math.min(100,S.relations[n]+4);S.annals.push(`${n}: личная встреча укрепила отношения.`);notify(`${n}: отношения +4`);render("relations")}
+
+function page_estate(){const cost=120+S.estate*28;$("page").innerHTML=`<div class="panel"><h2>Владения · уровень ${S.estate}/85</h2><p>${S.estate<10?"Военный двор":S.estate<25?"Укреплённое поместье":S.estate<45?"Городская резиденция":S.estate<65?"Военная столица":"Владение Великого генерала"}</p><div class="progress"><span style="width:${S.estate/85*100}%"></span></div><p class="muted">Казармы, кузницы, госпитали, академии, конюшни и административные здания усиливают твою власть.</p><button class="btn primary" onclick="estateUp()">Развить · ${cost} 🪙</button></div>`}
+function estateUp(){if(S.estate>=85)return notify("Достигнут максимальный уровень");let c=120+S.estate*28;if(S.gold<c)return notify("Недостаточно серебра");S.gold-=c;S.estate++;S.influence+=2;S.annals.push(`Владение достигло уровня ${S.estate}.`);render("estate")}
+
+function page_edicts(){$("page").innerHTML=`<div class="panel"><h2>60 государственных указов</h2><p class="muted">Указы становятся важнее с ростом политического влияния и владений.</p><div class="cards">${EDICTS.map(e=>`<div class="card"><h3>${e.name}</h3><p>${e.desc}</p><div>${e.cost} 🪙</div><button class="btn small ${S.edicts.includes(e.id)?"ghost":""}" ${S.edicts.includes(e.id)?"disabled":""} onclick="issueEdict(${e.id})">${S.edicts.includes(e.id)?"Издан":"Издать"}</button></div>`).join("")}</div></div>`}
+function issueEdict(id){const e=EDICTS[id-1];if(S.gold<e.cost)return notify("Недостаточно серебра");S.gold-=e.cost;S.edicts.push(id);S.influence+=3;S.annals.push(`Издан «${e.name}».`);notify("Указ вступил в силу");render("edicts")}
+
+function page_annals(){$("page").innerHTML=`<div class="panel"><h2>Летопись ${S.name}</h2><div class="log">${[...S.annals].reverse().map(x=>`<p>${x}</p>`).join("")}</div></div>`}
+function page_profile(){$("page").innerHTML=`<div class="panel"><h2>${S.name}</h2><p><span class="gold">${RANKS[S.rankIndex]}</span> · уровень ${S.level}</p><p>${S.origin} · ${S.home}</p><table class="table"><tr><td>Репутация</td><td>${S.reputation}</td></tr><tr><td>Влияние</td><td>${S.influence}</td></tr><tr><td>Операций</td><td>${S.completedOps.length}/420</td></tr><tr><td>Указов</td><td>${S.edicts.length}/60</td></tr><tr><td>Владение</td><td>${S.estate}/85</td></tr></table><div class="heroActions" style="justify-content:flex-start;margin-top:18px"><button class="btn primary" onclick="cloudSave()">Сохранить в аккаунт</button><button class="btn" onclick="rest()">Отдых</button><button class="btn ghost" onclick="exitGame()">Главное меню</button>${account?`<button class="btn ghost" onclick="logout()">Выйти из аккаунта</button>`:""}</div></div>`}
+function rest(){S.energy=100;advanceDay();S.annals.push("День отдыха восстановил силы.");notify("Энергия восстановлена");render("profile")}
+
+
+function toggleMobileMenu(force){
+  const s=$("gameSide");
+  if(!s)return;
+  const open = typeof force==="boolean" ? force : !s.classList.contains("open");
+  s.classList.toggle("open",open);
+}
+function buildMobileBottomNav(){
+  const n=$("mobileBottomNav");
+  if(!n)return;
+  const items=[
+    ["campaign","⚔","Сюжет"],
+    ["chronicles","☰","Операции"],
+    ["army","👥","Армия"],
+    ["relations","❤️","Связи"],
+    ["profile","王","Профиль"]
+  ];
+  n.innerHTML=items.map(([k,i,t])=>`<button data-mobile-page="${k}" onclick="render('${k}');toggleMobileMenu(false)"><span>${i}</span><small>${t}</small></button>`).join("");
+  n.classList.remove("hidden");
+}
+const _oldEnterGame=enterGame;
+enterGame=function(){
+  _oldEnterGame();
+  buildMobileBottomNav();
+}
+const _oldRender=render;
+render=function(k){
+  _oldRender(k);
+  document.querySelectorAll("[data-mobile-page]").forEach(b=>b.classList.toggle("active",b.dataset.mobilePage===k));
+  if(window.innerWidth<=820)toggleMobileMenu(false);
+}
+const _oldExitGame=exitGame;
+exitGame=function(){
+  _oldExitGame();
+  const n=$("mobileBottomNav"); if(n)n.classList.add("hidden");
+}
+window.addEventListener("resize",()=>{if(window.innerWidth>820)toggleMobileMenu(false)});
+
+</script>
+<script>
+/* ===== v1.2 dual account mode: server cloud + offline/local phone account ===== */
+const MANDATE_LOCAL_USERS_KEY="mandateLocalUsersV12";
+const MANDATE_LOCAL_SESSION_KEY="mandateLocalSessionV12";
+const MANDATE_LOCAL_SAVES_KEY="mandateLocalAccountSavesV12";
+let mandateBackendState="unknown";
+
+function localUsers(){try{return JSON.parse(localStorage.getItem(MANDATE_LOCAL_USERS_KEY)||"{}")}catch(e){return {}}}
+function writeLocalUsers(v){localStorage.setItem(MANDATE_LOCAL_USERS_KEY,JSON.stringify(v))}
+function localSaves(){try{return JSON.parse(localStorage.getItem(MANDATE_LOCAL_SAVES_KEY)||"{}")}catch(e){return {}}}
+function writeLocalSaves(v){localStorage.setItem(MANDATE_LOCAL_SAVES_KEY,JSON.stringify(v))}
+function simpleHash(str){
+  let h=2166136261;
+  for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}
+  return (h>>>0).toString(16);
+}
+function localAccountRegister(username,email,password){
+  username=(username||"").trim(); email=(email||"").trim().toLowerCase();
+  if(username.length<3) throw new Error("Имя пользователя — минимум 3 символа");
+  if(!email.includes("@")) throw new Error("Укажите корректный email");
+  if((password||"").length<6) throw new Error("Пароль — минимум 6 символов");
+  const users=localUsers();
+  const duplicate=Object.values(users).some(u=>u.username.toLowerCase()===username.toLowerCase()||u.email===email);
+  if(duplicate) throw new Error("Такое имя пользователя или email уже заняты на этом устройстве");
+  const id="local_"+Date.now()+"_"+Math.random().toString(36).slice(2,8);
+  users[id]={id,username,email,passwordHash:simpleHash(password),createdAt:new Date().toISOString()};
+  writeLocalUsers(users);
+  localStorage.setItem(MANDATE_LOCAL_SESSION_KEY,id);
+  account={id,username,local:true}; token="";
+  localStorage.setItem("mandateAccount",JSON.stringify(account));
+  localStorage.removeItem("mandateToken");
+  updateAccountButton();
+  return account;
+}
+function localAccountLogin(login,password){
+  login=(login||"").trim().toLowerCase();
+  const users=localUsers();
+  const user=Object.values(users).find(u=>u.username.toLowerCase()===login||u.email===login);
+  if(!user||user.passwordHash!==simpleHash(password||"")) throw new Error("Неверный логин или пароль");
+  localStorage.setItem(MANDATE_LOCAL_SESSION_KEY,user.id);
+  account={id:user.id,username:user.username,local:true}; token="";
+  localStorage.setItem("mandateAccount",JSON.stringify(account));
+  localStorage.removeItem("mandateToken");
+  updateAccountButton();
+  return account;
+}
+function localAccountSave(){
+  if(!account||!account.local||!S) return false;
+  const saves=localSaves(); saves[account.id]={save:S,updatedAt:new Date().toISOString()}; writeLocalSaves(saves);
+  localStorage.setItem("mandateLocalSave",JSON.stringify(S)); return true;
+}
+function localAccountLoad(){
+  if(!account||!account.local)return null;
+  const row=localSaves()[account.id]; return row?row.save:null;
+}
+async function backendAvailable(){
+  if(location.protocol==="file:"||location.protocol==="content:"){mandateBackendState="offline";return false}
+  try{
+    const c=new AbortController(); const t=setTimeout(()=>c.abort(),1200);
+    const r=await fetch("/api/me",{headers:token?{Authorization:`Bearer ${token}`}:{},signal:c.signal});
+    clearTimeout(t);
+    mandateBackendState=(r.status===401||r.ok)?"online":"offline";
+    return mandateBackendState==="online";
+  }catch(e){mandateBackendState="offline";return false}
+}
+
+/* Override auth so it transparently falls back to local accounts on Android/file opening. */
+register=async function(){
+  $("authMsg").textContent="";
+  const username=$("regName").value, email=$("regEmail").value, password=$("regPass").value;
+  try{
+    const online=await backendAvailable();
+    if(online){
+      try{
+        const d=await api("/api/register",{method:"POST",body:JSON.stringify({username,email,password})});
+        token=d.token;account=d.user;localStorage.setItem("mandateToken",token);localStorage.setItem("mandateAccount",JSON.stringify(account));
+        updateAccountButton();closeAuth();notify("Аккаунт создан · облачный режим");return;
+      }catch(e){
+        if(e.message && !/Failed to fetch|NetworkError|Load failed/i.test(e.message)) throw e;
+      }
+    }
+    localAccountRegister(username,email,password);
+    closeAuth();notify("Аккаунт создан на этом телефоне");
+  }catch(e){$("authMsg").textContent=e.message}
+}
+login=async function(){
+  $("authMsg").textContent="";
+  const loginValue=$("loginId").value, password=$("loginPass").value;
+  try{
+    const online=await backendAvailable();
+    if(online){
+      try{
+        const d=await api("/api/login",{method:"POST",body:JSON.stringify({login:loginValue,password})});
+        token=d.token;account=d.user;localStorage.setItem("mandateToken",token);localStorage.setItem("mandateAccount",JSON.stringify(account));
+        updateAccountButton();closeAuth();notify("Вход выполнен · облачный режим");return;
+      }catch(e){
+        if(e.message && !/Failed to fetch|NetworkError|Load failed/i.test(e.message)) {
+          // If server rejected credentials, still allow a distinct local account to be tried.
+          try{localAccountLogin(loginValue,password);closeAuth();notify("Вход выполнен · локальный режим");return}catch(localErr){throw e}
+        }
+      }
+    }
+    localAccountLogin(loginValue,password);closeAuth();notify("Вход выполнен на этом телефоне");
+  }catch(e){$("authMsg").textContent=e.message}
+}
+cloudSave=async function(){
+  if(!S)return;
+  if(account&&account.local){
+    localAccountSave();notify("Сохранено в аккаунте на этом телефоне");return;
+  }
+  if(token){
+    try{await api("/api/save",{method:"PUT",body:JSON.stringify({save:S})});localSave();notify("Сохранено в облачном аккаунте");return}
+    catch(e){}
+  }
+  localSave();notify("Сохранено локально");
+}
+const _continueCampaignV12=continueCampaign;
+continueCampaign=async function(){
+  let loaded=null;
+  if(account&&account.local) loaded=localAccountLoad();
+  if(!loaded&&token){
+    try{const d=await api("/api/save");loaded=d.save}catch(e){}
+  }
+  if(!loaded)loaded=JSON.parse(localStorage.getItem("mandateLocalSave")||"null");
+  if(!loaded){notify("Сохранений пока нет");return}
+  S=loaded;enterGame();
+}
+logout=function(){
+  token="";account=null;
+  localStorage.removeItem("mandateToken");localStorage.removeItem("mandateAccount");localStorage.removeItem(MANDATE_LOCAL_SESSION_KEY);
+  updateAccountButton();notify("Вы вышли из аккаунта");
+}
+(function restoreLocalSession(){
+  if(account)return;
+  const id=localStorage.getItem(MANDATE_LOCAL_SESSION_KEY);
+  const u=localUsers()[id];
+  if(u){account={id:u.id,username:u.username,local:true};localStorage.setItem("mandateAccount",JSON.stringify(account));updateAccountButton()}
+})();
+</script>
+
+
+<script>
+const MANDATE_BOOSTY_URL="https://boosty.to/7thdimension/purchase/2906702?ssource=DIRECT&share=subscription_link";
+let mandateAccess={active:false,grant:null};
+
+async function fetchAccess(){
+  if(!token || (account&&account.local)) return {active:false,local:true};
+  try{
+    mandateAccess=await api("/api/access");
+    return mandateAccess;
+  }catch(e){return {active:false,error:e.message}}
+}
+async function requestBoostyAccess(){
+  if(!account){
+    closePurchase();openAuth();$("authMsg").textContent="Сначала создай игровой аккаунт или войди.";
+    return;
+  }
+  if(account.local){
+    notify("Для Boosty-доступа открой опубликованную серверную версию игры.");
+    return;
+  }
+  try{
+    const d=await api("/api/access/request",{method:"POST",body:"{}" });
+    closePurchase();notify("Запрос на подтверждение подписки отправлен");
+  }catch(e){notify(e.message)}
+}
+async function requireSubscription(){
+  if(account&&account.local){
+    openPurchase();return false;
+  }
+  if(!account){openAuth();$("authMsg").textContent="Для полной версии нужен игровой аккаунт.";return false}
+  const a=await fetchAccess();
+  if(a.active)return true;
+  openPurchase();return false;
+}
+const _newCampaignBoosty=newCampaign;
+newCampaign=async function(){
+  if(await requireSubscription()) _newCampaignBoosty();
+}
+const _continueCampaignBoosty=continueCampaign;
+continueCampaign=async function(){
+  if(await requireSubscription()) _continueCampaignBoosty();
+}
+const _page_profile_boosty=page_profile;
+page_profile=async function(){
+  _page_profile_boosty();
+  const p=$("page");
+  const a=await fetchAccess();
+  const box=document.createElement("div");box.className="panel";
+  if(a.active){
+    box.innerHTML=`<h2>Boosty-доступ</h2><p class="good"><b>● Подписка активна</b></p><p class="muted">Полная версия разблокирована${a.grant&&a.grant.expires_at?` до ${new Date(a.grant.expires_at).toLocaleDateString("ru-RU")}`:""}.</p>`;
+  }else{
+    const status=a.grant&&a.grant.status==="pending"?"Ожидает подтверждения":"Нет активной подписки";
+    box.innerHTML=`<h2>Boosty-доступ</h2><p class="bad"><b>${status}</b></p><p>Полная версия: <b>$3 / месяц</b>.</p><p><a class="btn primary" href="${MANDATE_BOOSTY_URL}" target="_blank" rel="noopener">Оформить подписку</a> <button class="btn" onclick="requestBoostyAccess()">Я уже оплатил</button></p>`;
+  }
+  p.prepend(box);
+}
+</script>
+
+
+<script>
+async function linkDiscord(){
+  if(!account){openAuth();$("authMsg").textContent="Сначала войди в игровой аккаунт.";return}
+  if(account.local){notify("Автопроверка Discord работает только на опубликованной серверной версии.");return}
+  try{
+    const d=await api("/api/discord/link");
+    location.href=d.url;
+  }catch(e){notify(e.message)}
+}
+async function recheckDiscord(){
+  try{
+    const d=await api("/api/discord/recheck",{method:"POST",body:"{}"});
+    mandateAccess.active=!!d.active;
+    notify(d.active?"Роль найдена — доступ активирован":"Нужная роль Discord пока не найдена");
+    render("profile");
+  }catch(e){notify(e.message)}
+}
+async function unlinkDiscord(){
+  try{
+    await api("/api/discord/unlink",{method:"POST",body:"{}"});
+    mandateAccess={active:false,grant:null};notify("Discord отвязан");render("profile");
+  }catch(e){notify(e.message)}
+}
+(function discordReturnNotice(){
+  const q=new URLSearchParams(location.search);
+  const v=q.get("discord_access");
+  if(v){
+    setTimeout(()=>{
+      if(v==="active") notify("Discord связан · подписка подтверждена");
+      else if(v==="linked") notify("Discord связан, но роль подписчика не найдена");
+      else notify("Не удалось связать Discord");
+    },400);
+    history.replaceState({},document.title,location.pathname+location.hash);
+  }
+})();
+const _pageProfileDiscord=page_profile;
+page_profile=async function(){
+  _pageProfileDiscord();
+  const a=await fetchAccess();
+  const existing=document.querySelector("#discordAccessPanel");
+  if(existing)existing.remove();
+  const box=document.createElement("div");box.id="discordAccessPanel";box.className="panel";
+  if(account&&account.local){
+    box.innerHTML=`<h2>Discord + Boosty</h2><p class="muted">Для автоматической проверки подписки открой опубликованную серверную версию игры.</p>`;
+  } else if(a.active){
+    const name=a.discord&&a.discord.discord_username?` · ${a.discord.discord_username}`:"";
+    box.innerHTML=`<h2>Discord + Boosty</h2><p class="good"><b>● Доступ активен${name}</b></p>
+      <p class="muted">Сервер обнаружил роль подписчика Boosty. Проверка повторяется при обращении к платным функциям.</p>
+      <button class="btn" onclick="recheckDiscord()">Проверить снова</button>
+      <button class="btn ghost" onclick="unlinkDiscord()">Отвязать Discord</button>`;
+  } else {
+    const linked=!!a.discord;
+    const reason=linked?"Discord связан, но роль подписчика Boosty не найдена.":"Discord ещё не связан с игровым аккаунтом.";
+    box.innerHTML=`<h2>Discord + Boosty</h2><p class="bad"><b>${reason}</b></p>
+      <p><a class="btn primary" href="${MANDATE_BOOSTY_URL}" target="_blank" rel="noopener">1. Подписаться на Boosty · $3</a></p>
+      <p><button class="btn" onclick="linkDiscord()">2. Связать Discord</button>
+      ${linked?`<button class="btn ghost" onclick="recheckDiscord()">Проверить роль</button>`:""}</p>`;
+  }
+  $("page").prepend(box);
+}
+</script>
+
+</body></html>
