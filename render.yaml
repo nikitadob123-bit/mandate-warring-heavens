@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: mandate-warring-heavens
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mandate-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_KEY
+        generateValue: true
+      - key: BOOSTY_URL
+        value: https://boosty.to/7thdimension/purchase/2906702?ssource=DIRECT&share=subscription_link
+      - key: BOOSTY_PRICE_USD
+        value: "3"
+      - key: DISCORD_CLIENT_ID
+        value: "1535774561756962160"
+      - key: DISCORD_GUILD_ID
+        value: "1535767072188137523"
+      - key: DISCORD_BOOSTY_ROLE_ID
+        value: "1535767431094734948"
+      - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+databases:
+  - name: mandate-db
+    plan: free
+    databaseName: mandate
+    user: mandate
