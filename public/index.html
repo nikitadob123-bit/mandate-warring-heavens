@@ -150,7 +150,7 @@ img,svg,canvas{max-width:100%;height:auto}
 <div class="feature"><h3>🏯 Владения и политика</h3><p>Развивай поместье до города, издавай указы, управляй казной и влиянием при дворе.</p></div>
 <div class="feature"><h3>📜 Личная летопись</h3><p>Игра записывает важные решения и превращает прохождение в биографию твоего героя.</p></div></div></section>
 <section id="editions" class="section alt"><h2>Доступ к игре</h2><p class="sectionLead">Страница продаж готова как шаблон: цены и платёжную систему можно подключить к реальному провайдеру перед коммерческим запуском.</p><div class="priceGrid">
-<div class="price"><h3>Рекрут</h3><div class="amount">Бесплатно</div><p class="muted">Пролог и базовые системы.</p><ul><li>Создание героя</li><li>Первые 3 главы</li><li>Локальная летопись</li></ul><button class="btn" onclick="newCampaign()">Играть</button></div>
+<div class="price"><h3>Рекрут</h3><div class="amount">Бесплатно</div><p class="muted">Демо-версия: создание героя, первые 3 главы и базовые системы.</p><ul><li>Создание героя</li><li>Первые 3 главы</li><li>Локальная летопись</li><li>Без полного сюжета и премиум-контента</li></ul><button class="btn" onclick="newCampaign()">Играть</button></div>
 <div class="price featured"><h3>Великий генерал</h3><div class="amount">$3 / месяц</div><p class="muted">Основное издание проекта.</p><ul><li>Все 42 главы</li><li>420 операций</li><li>Отношения и свидания</li><li>85 уровней владений</li><li>Облачное сохранение аккаунта</li></ul><a class="btn primary" href="https://boosty.to/7thdimension/purchase/2906702?ssource=DIRECT&share=subscription_link" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">Оформить на Boosty · $3</a></div>
 <div class="price"><h3>Летописец</h3><div class="amount">Издание поддержки</div><p class="muted">Для будущих дополнительных материалов.</p><ul><li>Всё из полной версии</li><li>Цифровая летопись</li><li>Косметические знамёна</li></ul><button class="btn" onclick="openPurchase()">Подробнее</button></div></div></section>
 <section id="faq" class="section"><h2>FAQ о покупке и аккаунте</h2><div class="faqGrid">
@@ -665,4 +665,312 @@ page_profile=async function(){
 }
 </script>
 
+
+<script>
+/* MANDATE v1.7 menu/demo patch */
+
+const DEMO_MAX_CHAPTER = 3;
+
+function hasPremiumAccess(){
+    return localStorage.getItem("mandatePremium") === "true";
+}
+
+function openGameFromMenu(){
+    newCampaign();
+}
+
+async function checkPremiumStatus(){
+    try{
+        const d = await api("/api/access");
+        localStorage.setItem("mandatePremium", d.active ? "true":"false");
+        notify(d.active ? "👑 Полная версия активна" : "Доступ: демо-версия");
+        return d.active;
+    }catch(e){
+        return false;
+    }
+}
+
+function demoLimitCheck(){
+    if(!hasPremiumAccess() && S && S.chapter > DEMO_MAX_CHAPTER){
+        notify("Демо завершено. Оформи доступ Полководец для полной кампании.");
+        return false;
+    }
+    return true;
+}
+</script>
+
+<style>
+.accessGate{
+position:fixed;inset:0;background:#080604ee;z-index:200;
+display:grid;place-items:center;padding:20px
+}
+.accessCard{
+width:min(500px,100%);background:#17100c;
+border:1px solid #c69b4b;padding:30px;text-align:center
+}
+.accessCard h1{color:#e0bd72}
+.accessStatus{font-size:22px;margin:20px}
+</style>
+
+<div id="accessGate" class="accessGate hidden">
+ <div class="accessCard">
+  <h1>MANDATE</h1>
+  <h2>Проверка доступа</h2>
+  <div id="accessStatus" class="accessStatus">
+   Проверка статуса...
+  </div>
+  <button class="btn primary" onclick="enterAfterAccess()">Начать игру</button>
+  <button class="btn" onclick="openPurchase()">Получить полный доступ</button>
+ </div>
+</div>
+
+<script>
+async function showAccessGate(){
+ const gate=document.getElementById("accessGate");
+ if(!gate)return;
+ gate.classList.remove("hidden");
+
+ try{
+   const d=await api("/api/access");
+   localStorage.setItem("mandatePremium",d.active?"true":"false");
+   document.getElementById("accessStatus").innerHTML =
+    d.active
+    ? "👑 Полководец Premium<br><small>Полная версия открыта</small>"
+    : "⚔ Рекрут Demo<br><small>Доступны первые главы</small>";
+ }catch(e){
+   document.getElementById("accessStatus").innerHTML=
+    "⚔ Демо-режим<br><small>Войдите для проверки подписки</small>";
+ }
+}
+
+function enterAfterAccess(){
+ document.getElementById("accessGate").classList.add("hidden");
+ newCampaign();
+}
+</script>
+
+<style>
+.profileCard{
+border:1px solid #c69b4b;
+background:linear-gradient(145deg,#21150d,#0d0907);
+padding:22px;
+margin-bottom:15px;
+}
+.profileRank{
+font-size:26px;
+color:#e0bd72;
+}
+.profilePremium{
+border:1px solid #c69b4b;
+padding:15px;
+margin-top:12px;
+}
+</style>
+
+<script>
+async function renderAccountStatus(){
+ try{
+  const d=await api("/api/access");
+  const premium=d.active;
+  notify(premium ? "👑 Полководец Premium активен" : "⚔ Демо-аккаунт");
+ }catch(e){}
+}
+
+function showProfileCard(){
+ const box=document.getElementById("page");
+ if(!box)return;
+
+ box.innerHTML=`
+ <div class="panel profileCard">
+   <h2>Карточка полководца</h2>
+   <div class="profileRank">
+   ${account ? account.username : "Неизвестный воин"}
+   </div>
+   <p>Статус аккаунта:</p>
+   <div class="profilePremium">
+   👑 Проверка подписки через Discord<br>
+   ⚔ Доступ определяется ролью Полководец
+   </div>
+   <br>
+   <button class="btn" onclick="checkSubscription()">
+   🔄 Проверить статус
+   </button>
+ </div>`;
+}
+</script>
+
+<style>
+.saveLauncher{
+border:1px solid #c69b4b;
+background:#17100c;
+padding:22px;
+margin-bottom:15px
+}
+.saveSlot{
+border:1px solid #4d3a28;
+padding:15px;
+margin:10px 0;
+background:#211711
+}
+.saveSlot h3{color:#e0bd72}
+</style>
+
+<script>
+function openSaveLauncher(){
+ const page=document.getElementById("page");
+ if(!page)return;
+
+ const save=localStorage.getItem("mandateLocalSave");
+ let data=null;
+ try{data=JSON.parse(save)}catch(e){}
+
+ page.innerHTML=`
+ <div class="panel saveLauncher">
+ <h2>Летопись героя</h2>
+ <p class="muted">Выберите сохранение или начните новую кампанию.</p>
+
+ <div class="saveSlot">
+ <h3>${data ? data.name : "Пустой слот"}</h3>
+ <p>
+ ${data ? "Глава "+data.chapter+"/42 · Уровень "+data.level : "Нет сохранения"}
+ </p>
+ <p class="muted">
+ ${data ? data.year+" год · День "+data.day : ""}
+ </p>
+
+ ${data ? 
+ `<button class="btn primary" onclick="continueCampaign()">Загрузить</button>
+ <button class="btn ghost" onclick="deleteSaveSlot()">Удалить</button>`
+ :
+ `<button class="btn primary" onclick="newCampaign()">Создать героя</button>`
+ }
+ </div>
+ </div>`;
+}
+
+function deleteSaveSlot(){
+ localStorage.removeItem("mandateLocalSave");
+ notify("Сохранение удалено");
+ openSaveLauncher();
+}
+</script>
+
+<style>
+.cloudPanel{
+border:1px solid #c69b4b;
+background:#17100c;
+padding:20px;
+margin-top:15px
+}
+.cloudPanel h3{color:#e0bd72}
+</style>
+
+<script>
+async function showCloudProfile(){
+ try{
+   const me = await api("/api/me");
+   const access = await api("/api/access");
+   notify(
+    access.active
+    ? "☁️ Облако: активно · 👑 Premium"
+    : "☁️ Аккаунт подключён · ⚔ Демо"
+   );
+ }catch(e){
+   notify("Войдите в аккаунт для облачных сохранений");
+ }
+}
+</script>
+
+<style>
+.profileHub{
+max-width:900px;
+margin:auto;
+}
+.profileHero{
+display:flex;
+gap:20px;
+align-items:center;
+padding:25px;
+background:linear-gradient(145deg,#2b1b10,#120b07);
+border:1px solid #c69b4b;
+}
+.avatar{
+width:90px;height:90px;
+border-radius:50%;
+display:grid;
+place-items:center;
+font-size:45px;
+border:2px solid #e0bd72;
+background:#0b0806;
+}
+.rankBadge{
+color:#e0bd72;
+font-size:22px;
+}
+.statGrid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+margin-top:15px;
+}
+.statBox{
+padding:15px;
+background:#211711;
+border:1px solid #4d3a28;
+text-align:center;
+}
+@media(max-width:700px){
+.statGrid{grid-template-columns:1fr}
+.profileHero{flex-direction:column;text-align:center}
+}
+</style>
+
+<script>
+async function openProfileHub(){
+ const page=document.getElementById("page");
+ if(!page)return;
+
+ let user="Гость";
+ let premium=false;
+
+ try{
+   const me=await api("/api/me");
+   user=me.username;
+   const ac=await api("/api/access");
+   premium=ac.active;
+ }catch(e){}
+
+ page.innerHTML=`
+ <div class="panel profileHub">
+
+ <div class="profileHero">
+  <div class="avatar">⚔</div>
+  <div>
+   <h2>${user}</h2>
+   <div class="rankBadge">
+   ${premium ? "👑 Полководец Premium":"⚔ Рекрут Demo"}
+   </div>
+   <p class="muted">Личный военный профиль MANDATE</p>
+  </div>
+ </div>
+
+ <div class="statGrid">
+  <div class="statBox">☁<br>Облако<br><b>Активно</b></div>
+  <div class="statBox">🎖<br>Ранг<br><b>Воин</b></div>
+  <div class="statBox">👑<br>Доступ<br><b>${premium?"Полный":"Демо"}</b></div>
+ </div>
+
+ <br>
+
+ <button class="btn primary" onclick="checkSubscription()">
+ 🔄 Проверить подписку
+ </button>
+
+ <button class="btn ghost" onclick="logout()">
+ Выйти из аккаунта
+ </button>
+
+ </div>`;
+}
+</script>
 </body></html>
