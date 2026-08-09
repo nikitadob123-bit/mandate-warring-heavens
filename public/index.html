@@ -973,4 +973,133 @@ async function openProfileHub(){
  </div>`;
 }
 </script>
+
+
+<style id="mandate-final-menu-patch">
+/* v1.8: clean launcher + real demo gate */
+#features,#editions,#faq{display:none}
+#faq.menuPanelOpen,#editions.menuPanelOpen{display:block;min-height:100vh;padding-top:92px}
+#landing.menuPanelHidden{display:none!important}
+.launcherExtra{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.demoBadge{display:inline-block;border:1px solid #806638;padding:7px 10px;margin-top:12px;color:#d7b66d;background:#17100c}
+.demoLock{border:1px solid #6d512d;background:#17100c;padding:24px;text-align:center}
+</style>
+<script id="mandate-final-behavior-patch">
+/* Authoritative launcher/demo behavior. This block intentionally overrides older wrappers. */
+const DEMO_CHAPTER_LIMIT=3;
+let mandatePremiumRuntime=false;
+
+function setPremiumRuntime(v){
+  mandatePremiumRuntime=!!v;
+  localStorage.setItem("mandatePremium", mandatePremiumRuntime?"true":"false");
+}
+async function refreshPremiumRuntime(silent=true){
+  if(!token || (account&&account.local)){ setPremiumRuntime(false); return false; }
+  try{ const a=await api("/api/access"); mandateAccess=a; setPremiumRuntime(!!a.active); return !!a.active; }
+  catch(e){ setPremiumRuntime(false); if(!silent) notify("Не удалось проверить подписку"); return false; }
+}
+function isPremium(){ return mandatePremiumRuntime===true; }
+function closeMenuPanels(){
+  ["faq","editions"].forEach(id=>$(id)?.classList.remove("menuPanelOpen"));
+  $("landing")?.classList.remove("menuPanelHidden");
+  scrollTo(0,0);
+}
+function openMenuPanel(id){
+  ["faq","editions"].forEach(x=>$(x)?.classList.toggle("menuPanelOpen",x===id));
+  $("landing")?.classList.add("menuPanelHidden");
+  scrollTo(0,0);
+}
+function injectLauncherButtons(){
+  const actions=document.querySelector("#landing .heroActions");
+  if(!actions||actions.dataset.v18)return;
+  actions.dataset.v18="1";
+  actions.innerHTML=`<button class="btn primary" onclick="newCampaign()">劍 Новая игра</button>
+    <button class="btn" onclick="continueCampaign()">↻ Загрузить</button>
+    <button class="btn ghost" onclick="openMenuPanel('faq')">? FAQ</button>
+    <button class="btn ghost" onclick="openMenuPanel('editions')">令 Доступ</button>`;
+  document.querySelector("#landing .hero > div")?.insertAdjacentHTML("beforeend",`<div class="demoBadge">⚔ Без подписки: демо, главы 1–3 · 👑 Discord/Boosty: полная версия</div>`);
+  ["faq","editions"].forEach(id=>{
+    const sec=$(id); if(sec&&!sec.querySelector(".menuBack")) sec.insertAdjacentHTML("afterbegin",`<button class="btn ghost menuBack" onclick="closeMenuPanels()">← Главное меню</button>`);
+  });
+  const nav=document.querySelector("#landing .navlinks");
+  if(nav) nav.innerHTML=`<button class="btn small ghost" onclick="openMenuPanel('faq')">FAQ</button><button class="btn small ghost" onclick="openMenuPanel('editions')">Доступ</button><button id="accountBtn" class="btn small" onclick="openAuth()">Войти</button>`;
+  updateAccountButton();
+}
+
+// Demo is allowed to start. Subscription changes only the amount of content.
+newCampaign=async function(){
+  await refreshPremiumRuntime();
+  closeMenuPanels();
+  $("landing").classList.add("hidden"); $("createScreen").classList.remove("hidden");
+  notify(isPremium()?"👑 Полная версия":"⚔ Демо: доступны главы 1–3");
+};
+exitCreate=function(){ $("createScreen").classList.add("hidden"); $("landing").classList.remove("hidden"); closeMenuPanels(); };
+
+const _v18StartCampaign=startCampaign;
+startCampaign=function(){ _v18StartCampaign(); if(!isPremium()) S.flags.demo=true; };
+
+continueCampaign=async function(){
+  await refreshPremiumRuntime();
+  let loaded=null;
+  if(token&&isPremium()){ try{const d=await api("/api/save"); loaded=d.save}catch(e){} }
+  if(!loaded) loaded=JSON.parse(localStorage.getItem("mandateLocalSave")||"null");
+  if(!loaded){ notify("Сохранений пока нет"); return; }
+  if(!isPremium() && Number(loaded.chapter||1)>DEMO_CHAPTER_LIMIT){
+    openPurchase(); notify("Это сохранение продолжено дальше демо. Нужна полная версия."); return;
+  }
+  S=loaded; enterGame();
+};
+
+const FULL_NAV=NAV.slice();
+function allowedNav(){
+  if(isPremium()) return FULL_NAV;
+  const premiumPages=new Set(["relations","estate","edicts"]);
+  return FULL_NAV.filter(([k])=>!premiumPages.has(k));
+}
+enterGame=function(){
+  $("landing").classList.add("hidden"); $("createScreen").classList.add("hidden"); $("gameScreen").classList.remove("hidden");
+  const nav=allowedNav();
+  $("gameNav").innerHTML=nav.map(([k,n])=>`<button data-page="${k}" onclick="render('${k}')">${n}</button>`).join("");
+  render((S.lastPage&&nav.some(([k])=>k===S.lastPage))?S.lastPage:"campaign");
+};
+exitGame=function(){ $("gameScreen").classList.add("hidden"); $("landing").classList.remove("hidden"); localSave(); closeMenuPanels(); };
+
+const _v18Render=render;
+render=function(k){
+  if(!isPremium() && ["relations","estate","edicts"].includes(k)){
+    $("pageTitle").textContent="Полная версия";
+    $("page").innerHTML=`<div class="demoLock"><h2>👑 Раздел полной версии</h2><p>Отношения, владения и указы открываются после подтверждения роли Boosty в Discord.</p><button class="btn primary" onclick="openPurchase()">Открыть полный доступ</button></div>`; return;
+  }
+  _v18Render(k);
+};
+
+const _v18ChapterAction=chapterAction;
+chapterAction=function(type){
+  if(!isPremium() && S.chapter>=DEMO_CHAPTER_LIMIT){
+    $("page").insertAdjacentHTML("afterbegin",`<div class="demoLock"><h2>⚔ Конец демо</h2><p>Ты прошёл 3 бесплатные главы. Полная кампания содержит 42 главы и 420 операций.</p><button class="btn primary" onclick="openPurchase()">Разблокировать полную кампанию</button></div>`);
+    notify("Демо завершено на 3-й главе"); return;
+  }
+  _v18ChapterAction(type);
+};
+const _v18RunOp=runOp;
+runOp=function(id){
+  const o=OPERATIONS[id-1];
+  if(!isPremium() && o && o.chapter>DEMO_CHAPTER_LIMIT){ openPurchase(); return notify("Эта операция доступна в полной версии"); }
+  _v18RunOp(id);
+};
+
+// Cloud save remains a paid feature; demo keeps local saves.
+cloudSave=async function(){
+  if(!S)return;
+  localSave();
+  if(!isPremium()){ notify("Демо сохранено локально. Облако — в полной версии."); return; }
+  if(!token){ notify("Сохранено локально. Войди в аккаунт для облака."); return; }
+  try{await api("/api/save",{method:"PUT",body:JSON.stringify({save:S})});notify("Сохранено в аккаунте")}catch(e){notify(e.message)}
+};
+
+// Do not let an old cached Premium flag unlock content without a server check.
+setPremiumRuntime(false);
+document.addEventListener("DOMContentLoaded",async()=>{ injectLauncherButtons(); await refreshPremiumRuntime(); });
+</script>
+
 </body></html>
