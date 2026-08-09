@@ -60,6 +60,7 @@ const NAV=[
  ["annals","📜 Летопись"],["profile","王 Профиль"]
 ];
 let selectedOrigin=ORIGINS[0][0], S=null, token=localStorage.getItem("mandateToken")||"", account=JSON.parse(localStorage.getItem("mandateAccount")||"null");
+refreshAccessState();
 
 function notify(t){$("toast").textContent=t;$("toast").classList.remove("hidden");setTimeout(()=>$("toast").classList.add("hidden"),1800)}
 function updateAccountButton(){$("accountBtn").textContent=account?`王 ${account.username}`:"Войти"}
@@ -74,14 +75,24 @@ async function api(url,opt={}){
  if(!r.ok) throw new Error(d.error||"Ошибка сервера"); return d;
 }
 async function register(){
- try{const d=await api("/api/register",{method:"POST",body:JSON.stringify({username:$("regName").value,email:$("regEmail").value,password:$("regPass").value})});token=d.token;account=d.user;localStorage.setItem("mandateToken",token);localStorage.setItem("mandateAccount",JSON.stringify(account));updateAccountButton();closeAuth();notify("Аккаунт создан")}
+ try{const d=await api("/api/register",{method:"POST",body:JSON.stringify({username:$("regName").value,email:$("regEmail").value,password:$("regPass").value})});token=d.token;account=d.user;localStorage.setItem("mandateToken",token);localStorage.setItem("mandateAccount",JSON.stringify(account));await refreshAccessState();updateAccountButton();closeAuth();notify("Аккаунт создан")}
  catch(e){$("authMsg").textContent=e.message}
 }
 async function login(){
- try{const d=await api("/api/login",{method:"POST",body:JSON.stringify({login:$("loginId").value,password:$("loginPass").value})});token=d.token;account=d.user;localStorage.setItem("mandateToken",token);localStorage.setItem("mandateAccount",JSON.stringify(account));updateAccountButton();closeAuth();notify("Вход выполнен")}
+ try{const d=await api("/api/login",{method:"POST",body:JSON.stringify({login:$("loginId").value,password:$("loginPass").value})});token=d.token;account=d.user;localStorage.setItem("mandateToken",token);localStorage.setItem("mandateAccount",JSON.stringify(account));await refreshAccessState();updateAccountButton();closeAuth();notify("Вход выполнен")}
  catch(e){$("authMsg").textContent=e.message}
 }
-function logout(){token="";account=null;localStorage.removeItem("mandateToken");localStorage.removeItem("mandateAccount");updateAccountButton();notify("Вы вышли из аккаунта")}
+async function refreshAccessState(){
+ if(!token)return;
+ try{
+  const r=await fetch("/api/access",{headers:{Authorization:"Bearer "+token}});
+  const a=await r.json();
+  window.mandateAccess=a;
+  localStorage.setItem("mandateAccess",JSON.stringify(a));
+ }catch(e){console.warn("access refresh",e)}
+}
+
+function logout(){token="";account=null;localStorage.removeItem("mandateToken");localStorage.removeItem("mandateAccount");localStorage.removeItem("mandateAccess");updateAccountButton();notify("Вы вышли из аккаунта")}
 function openPurchase(){$("purchaseModal").classList.remove("hidden")}function closePurchase(){$("purchaseModal").classList.add("hidden")}
 
 $("origins").innerHTML=ORIGINS.map((o,i)=>`<div class="origin ${i===0?"active":""}" onclick="pickOrigin(this,'${o[0]}')"><b>${o[0]}</b><small>${o[1]}</small></div>`).join("");
