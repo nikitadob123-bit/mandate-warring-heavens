@@ -231,3 +231,36 @@ exitGame=function(){
   const n=$("mobileBottomNav"); if(n)n.classList.add("hidden");
 }
 window.addEventListener("resize",()=>{if(window.innerWidth>820)toggleMobileMenu(false)});
+
+
+// === MANDATE FULL RPG EXPANSION ===
+const RPG_ITEMS={
+ "Меч Небесного Дракона":{rarity:"Легендарный",attack:150,morale:15},
+ "Доспех Черного Дракона":{rarity:"Эпический",defense:120,hp:40}
+};
+
+const RPG_UNITS={
+ "Железные копья Цзинь":{attack:80,defense:110,morale:90},
+ "Лучники Цинь":{attack:120,defense:50,morale:75},
+ "Небесная гвардия":{attack:180,defense:160,morale:100}
+};
+
+function calculateBattle(player,enemy,formation="Клин"){
+ let bonus=formation==="Клин"?1.3:formation==="Черепаха"?0.9:1;
+ let p=(player.army+1)*(player.stats.Тактика+player.stats.Сила)*bonus;
+ let e=enemy.power||1000;
+ return {power:Math.floor(p),enemy:e,result:p>=e?"victory":"defeat"};
+}
+
+function startGeneralDuel(name){
+ notify("⚔ Дуэль с генералом "+name+" началась!");
+}
+
+function unlockDemoCheck(){
+ const full=window.accountAccess===true;
+ document.querySelectorAll("[data-premium-content]").forEach(e=>{
+   if(!full)e.classList.add("locked");
+ });
+}
+
+window.addEventListener("load",unlockDemoCheck);
