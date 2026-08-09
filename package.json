@@ -1,11 +1,15 @@
 {
   "name": "mandate-warring-heavens",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "description": "MANDATE: Воюющие Небеса — original browser war RPG",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "vite --config vite.config.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test",
+    "check": "node --check server.js && node --check public/core.js && node --check public/game.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -15,5 +19,8 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "vite": "^6.4.3"
   }
 }

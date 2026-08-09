@@ -1,6 +1,6 @@
 # Настройка Boosty → Discord → MANDATE
 
-## Что делает v1.4
+## Что делает версия 2.0
 
 Платёж обрабатывает Boosty. Boosty должен выдавать активным подписчикам выбранную роль на вашем Discord-сервере.
 MANDATE не получает пароль Boosty и не обращается к приватным endpoint'ам Boosty.
@@ -40,7 +40,7 @@ OAuth2 Redirect URI:
 - локально: `http://localhost:3000/api/discord/callback`
 - на сайте: `https://ВАШ-ДОМЕН/api/discord/callback`
 
-Точно такой же URL укажите в `.env` как `DISCORD_REDIRECT_URI`.
+Публичный адрес игры укажите в `.env` как `APP_BASE_URL`. Сервер сам добавит к нему `/api/discord/callback`.
 
 Скопируйте:
 - Application / Client ID → `DISCORD_CLIENT_ID`
@@ -67,7 +67,7 @@ BOOSTY_PRICE_USD=3
 
 DISCORD_CLIENT_ID=1234567890
 DISCORD_CLIENT_SECRET=секрет
-DISCORD_REDIRECT_URI=https://game.example.com/api/discord/callback
+APP_BASE_URL=https://game.example.com
 DISCORD_BOT_TOKEN=токен_бота
 DISCORD_GUILD_ID=1234567890
 DISCORD_BOOSTY_ROLE_ID=1234567890
