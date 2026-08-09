@@ -635,7 +635,7 @@ async function unlinkDiscord(){
       else if(v==="linked") notify("Discord связан, но роль подписчика не найдена");
       else notify("Не удалось связать Discord");
     },400);
-    history.replaceState({},document.title,location.pathname+location.hash);
+    history.replaceState({},document.title,location.pathname+location.hash); setTimeout(()=>{if(typeof page_profile==="function") page_profile();},600);
   }
 })();
 const _pageProfileDiscord=page_profile;
